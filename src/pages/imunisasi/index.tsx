@@ -21,8 +21,10 @@ import {
   getImunisasiKeyword,
 } from "../../services/api";
 import { toast } from "../../components/ui/use-toast";
+import useImunisasiStore from "../../store";
 
 export default function Imunisasi() {
+  const { setEditGlobal }: any = useImunisasiStore();
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [offset, setOffset] = useState<number>(0);
@@ -164,6 +166,7 @@ export default function Imunisasi() {
                           setOpenModal(true);
                         }}
                         onEdit={() => {
+                          setEditGlobal(true);
                           navigate(
                             `/dashboard/imunisasi/add-data-imunisasi/${imns?.id}`
                           );

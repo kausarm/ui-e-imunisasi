@@ -10,8 +10,13 @@ import Cookies from "js-cookie";
 import moment from "moment";
 import { useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getImunisasiById, sendImunisasi } from "../../../services/api";
+import {
+  getImunisasiById,
+  sendImunisasi,
+  updateImunisasi,
+} from "../../../services/api";
 import { toast } from "../../../components/ui/use-toast";
+import useImunisasiStore from "../../../store";
 
 interface FormValues {
   puskesmas: string;
@@ -26,6 +31,7 @@ interface FormValues {
 }
 
 export default function AddDataImunisasi() {
+  const { editGlobal, setEditGlobal }: any = useImunisasiStore();
   const { id }: any = useParams();
   const navigate = useNavigate();
 
@@ -77,12 +83,12 @@ export default function AddDataImunisasi() {
   useEffect(() => {
     form.setValue("create_by", tkn);
     form.setValue("create_date", date);
-    form.setValue("puskesmas", dataEdit?.puskesmas);
-    form.setValue("HBO", dataEdit?.HBO);
-    form.setValue("BCG", dataEdit?.BCG);
-    form.setValue("POLIO1", dataEdit?.POLIO1);
-    form.setValue("DPT_HB_HIB1", dataEdit?.DPT_HB_HIB1);
-    form.setValue("CAMPAK", dataEdit?.CAMPAK);
+    form.setValue("puskesmas", dataEdit?.puskesmas?.toString());
+    form.setValue("HBO", dataEdit?.HBO?.toString());
+    form.setValue("BCG", dataEdit?.BCG?.toString());
+    form.setValue("POLIO1", dataEdit?.POLIO1?.toString());
+    form.setValue("DPT_HB_HIB1", dataEdit?.DPT_HB_HIB1?.toString());
+    form.setValue("CAMPAK", dataEdit?.CAMPAK?.toString());
   }, [
     dataEdit?.BCG,
     dataEdit?.CAMPAK,
@@ -121,9 +127,41 @@ export default function AddDataImunisasi() {
     },
   });
 
+  const { mutate: editImunisasi, isLoading: loadingEditImunisasi } =
+    useMutation({
+      mutationFn: async (data) => {
+        const res = await updateImunisasi(id, data);
+        return res;
+      },
+      onSuccess: (res: any) => {
+        if (res) {
+          toast({
+            title: res?.message,
+          });
+          setEditGlobal(false);
+          navigate(-1);
+        } else {
+          toast({
+            variant: "destructive",
+            title: res?.message,
+          });
+        }
+      },
+      onError: (error: any) => {
+        toast({
+          variant: "destructive",
+          title: error?.response?.data?.message || "Terjadi Kesalahan.",
+        });
+      },
+    });
+
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
-      createImunisasi(data);
+      if (editGlobal) {
+        editImunisasi(data);
+      } else {
+        createImunisasi(data);
+      }
     } catch (error) {
       return error;
     }
@@ -144,6 +182,7 @@ export default function AddDataImunisasi() {
                 type="button"
                 variant="outline"
                 onClick={() => {
+                  setEditGlobal(false);
                   navigate(-1);
                   form.reset();
                 }}
@@ -151,7 +190,9 @@ export default function AddDataImunisasi() {
                 Batal
               </Button>
               <Button type="submit">
-                {loadingImunisasi ? "Loading..." : "Simpan"}
+                {loadingImunisasi || loadingEditImunisasi
+                  ? "Loading..."
+                  : "Simpan"}
               </Button>
             </div>
           </form>
