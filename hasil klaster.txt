@@ -1,0 +1,3 @@
+- TINGGI
+- SEDANG
+- RENDAH
