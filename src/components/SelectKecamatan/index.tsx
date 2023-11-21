@@ -12,38 +12,38 @@ import {
   CommandItem,
 } from "../ui/command";
 import { cn } from "../../lib/utils";
-import { getPuskesmas } from "../../services/api";
+import { getKecamatan } from "../../services/api";
+import useImunisasiStore from "../../store";
 
 interface PuskesmasItem {
   id: string;
-  nama: any;
+  name: any;
 }
 
-interface SelectPuskesmasProps {
+interface SelectKecamatanProps {
   field: {
     value: string;
   };
   form: any;
   hide?: boolean;
-  disabled?: boolean;
   name?: string;
   labelSelect?: string;
 }
 
-export default function SelectPuskesmas({
+export default function SelectKecamatan({
   field,
   form,
   labelSelect,
-  disabled,
   name,
-}: SelectPuskesmasProps) {
+}: SelectKecamatanProps) {
+  const { setDataStore }: any = useImunisasiStore();
   const [isOpen, setIsOpen] = React.useState(false);
   const [label, setLabel] = useState(null);
 
-  const { data: puskesmas } = useQuery({
-    queryKey: ["puskesmas"],
+  const { data: kecamatan } = useQuery({
+    queryKey: ["kecamatan"],
     queryFn: async () => {
-      const res = await getPuskesmas();
+      const res = await getKecamatan("1110");
       return res?.data;
     },
     refetchOnWindowFocus: false,
@@ -51,19 +51,18 @@ export default function SelectPuskesmas({
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger className="w-full" disabled={disabled}>
+      <PopoverTrigger className="w-full">
         <FormControl>
           <Button
             variant="outline"
             type="button"
-            disabled={disabled}
             role="combobox"
             className={cn(
               `w-full justify-between`,
               !field.value && "text-muted-foreground"
             )}
           >
-            {label ? label : labelSelect ? labelSelect : "Pilih Puskesmas"}
+            {label ? label : labelSelect ? labelSelect : "Pilih Kecamatan"}
             <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
           </Button>
         </FormControl>
@@ -71,15 +70,16 @@ export default function SelectPuskesmas({
       <PopoverContent className="w-auto h-[320px] p-0 overflow-y-auto">
         <Command>
           <CommandInput placeholder="Type a command or search..." />
-          <CommandEmpty>No Puskesmas found.</CommandEmpty>
+          <CommandEmpty>No Kecamatan found.</CommandEmpty>
           <CommandGroup>
-            {puskesmas?.map((item: PuskesmasItem) => (
+            {kecamatan?.map((item: PuskesmasItem) => (
               <CommandItem
                 defaultValue={field?.value}
-                value={item?.nama}
+                value={item?.name}
                 key={item?.id}
                 onSelect={() => {
-                  setLabel(item?.nama);
+                  setDataStore(item?.id);
+                  setLabel(item?.name);
                   form.setValue(name, item?.id);
                 }}
               >
@@ -89,7 +89,7 @@ export default function SelectPuskesmas({
                     item?.id === field.value ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {item?.nama}
+                {item?.name}
               </CommandItem>
             ))}
           </CommandGroup>

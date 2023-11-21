@@ -15,19 +15,11 @@ import {
 } from "../../components/ui/table";
 import ActionButton from "../../components/action-button";
 import Pagination from "../../components/pagination";
-import {
-  deleteImunisasi,
-  getImunisasi,
-  getImunisasiFilter,
-  getImunisasiKeyword,
-} from "../../services/api";
+import { deleteUser, getUser, getUserKeyword } from "../../services/api";
 import { toast } from "../../components/ui/use-toast";
 import useImunisasiStore from "../../store";
-import SelectYear from "../../components/SelectYear";
-import { CircleDashed, DownloadIcon } from "lucide-react";
-import axios from "axios";
 
-export default function Imunisasi() {
+export default function Pengguna() {
   const { setEditGlobal }: any = useImunisasiStore();
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -37,28 +29,21 @@ export default function Imunisasi() {
   const [dataClicked, setDataClicked] = useState<any>();
 
   const [searchValue] = useDebounce(searchKeyword, 1000);
-  const [year, setYear] = useState("");
-  const [loadingDownload, setLoadingDonwload] = useState(false);
-  const [filter, setFilter] = useState(false);
 
   const {
-    data: imunisasi,
+    data: user,
     isLoading,
     isRefetching,
     refetch,
     isError,
   } = useQuery({
-    queryKey: ["imunisasi", searchValue, filter, year],
+    queryKey: ["user", searchValue],
     queryFn: async () => {
       if (searchValue !== "") {
-        const res = await getImunisasiKeyword(10, offset, searchValue);
-        return res;
-      }
-      if (filter) {
-        const res = await getImunisasiFilter(year);
+        const res = await getUserKeyword(10, offset, searchValue);
         return res;
       } else {
-        const res = await getImunisasi(10, offset);
+        const res = await getUser(10, offset);
         return res;
       }
     },
@@ -71,14 +56,15 @@ export default function Imunisasi() {
     setSelectedPage(event.selected);
   };
 
-  const { mutate: delImunisasi, isLoading: loadingDelete } = useMutation({
+  const { mutate: delUser, isLoading: loadingDelete } = useMutation({
     mutationFn: async (id: any) => {
-      const res = await deleteImunisasi(id);
+      const res = await deleteUser(id);
       return res;
     },
     onSuccess: (res: any) => {
       if (res) {
         toast({
+          variant: "success",
           title: res?.message,
         });
         refetch();
@@ -98,45 +84,14 @@ export default function Imunisasi() {
     },
   });
 
-  const handleDownload = async () => {
-    try {
-      // Make a GET request to the download endpoint
-      setLoadingDonwload(true);
-      const response = await axios.get(
-        "http://localhost:5005/imunisasi/download",
-        {
-          responseType: "blob", // Set the response type to blob
-        }
-      );
-
-      // Create a Blob from the response data
-      const blob = new Blob([response.data], {
-        type: response.headers["content-type"],
-      });
-      setLoadingDonwload(false);
-
-      // Create a link element and trigger a download
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = "imunisasi_data.xlsx"; // Set the desired file name
-      document.body.appendChild(link);
-      link.click();
-
-      // Remove the link element from the DOM
-      document.body.removeChild(link);
-    } catch (error) {
-      setLoadingDonwload(false);
-    }
-  };
-
   return (
     <>
-      <Sidebar navpage="Data Imunisasi" active="imunisasi">
+      <Sidebar navpage="Data Pengguna" active="pengguna">
         <div className="bg-white border-2 main-wrapper rounded-xl border-soft-blue">
           {/* header wrapper */}
           <div className="justify-between space-y-5 md:flex header__wrapper m-7 md:space-y-0">
             <div className="table__name">
-              <h1 className="font-semibold">Data Imunisasi</h1>
+              <h1 className="font-semibold">Data Pengguna</h1>
             </div>
             <div className="md:w-1/2 search__wrapper">
               <Input
@@ -147,33 +102,14 @@ export default function Imunisasi() {
                 }}
               />
             </div>
-            <div className="flex space-x-8 button__wrapper">
-              <SelectYear
-                onChange={(e: any) => {
-                  setFilter(true);
-                  setYear(e.target.value);
-                }}
-              />
+            <div className="space-x-8 button__wrapper">
               <Button
                 onClick={() => {
                   setEditGlobal(false);
-                  navigate("/dashboard/imunisasi/add-data-imunisasi");
+                  navigate("/dashboard/pengguna/add-data-pengguna");
                 }}
               >
                 Tambah Data
-              </Button>
-              <Button
-                size={"icon"}
-                onClick={() => {
-                  handleDownload();
-                }}
-                className={`bg-yellow-500`}
-              >
-                {loadingDownload ? (
-                  <CircleDashed className="animate-spin" />
-                ) : (
-                  <DownloadIcon />
-                )}
               </Button>
             </div>
           </div>
@@ -195,33 +131,29 @@ export default function Imunisasi() {
               <TableHeader>
                 <TableRow className="border-y border-dark-grey-pim bg-table-header">
                   <TableHead>NO</TableHead>
-                  <TableHead>PUSKESMAS</TableHead>
-                  <TableHead>TAHUN</TableHead>
-                  <TableHead>BCG</TableHead>
-                  <TableHead>CAMPAK</TableHead>
-                  <TableHead>DPT HB HIB1</TableHead>
-                  <TableHead>HBO</TableHead>
-                  <TableHead>POLIO</TableHead>
+                  <TableHead>NIK</TableHead>
+                  <TableHead>NAMA</TableHead>
+                  <TableHead>HP</TableHead>
+                  <TableHead>ROLE</TableHead>
+                  <TableHead>KECAMATAN</TableHead>
+                  <TableHead>KELURAHAN</TableHead>
                   <TableHead>ACTION</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {imunisasi?.data?.map((imns: any, index: string) => (
+                {user?.data?.map((usr: any, index: string) => (
                   <TableRow
                     className=""
                     key={index}
-                    onClick={() => setDataClicked(imns)}
+                    onClick={() => setDataClicked(usr)}
                   >
                     <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell className="font-medium">
-                      {imns?.puskesma?.nama}
-                    </TableCell>
-                    <TableCell>{imns?.create_date}</TableCell>
-                    <TableCell>{imns?.BCG}</TableCell>
-                    <TableCell>{imns?.CAMPAK}</TableCell>
-                    <TableCell>{imns?.DPT_HB_HIB1}</TableCell>
-                    <TableCell>{imns?.HBO ?? "-"}</TableCell>
-                    <TableCell>{imns?.POLIO1 ?? "-"}</TableCell>
+                    <TableCell className="font-medium">{usr?.nik}</TableCell>
+                    <TableCell className="font-medium">{usr?.nama}</TableCell>
+                    <TableCell>{usr?.level_user?.nama}</TableCell>
+                    <TableCell>{usr?.hp}</TableCell>
+                    <TableCell>{usr?.district?.name}</TableCell>
+                    <TableCell>{usr?.village?.name ?? "-"}</TableCell>
 
                     <TableCell>
                       <ActionButton
@@ -232,7 +164,7 @@ export default function Imunisasi() {
                         onEdit={() => {
                           setEditGlobal(true);
                           navigate(
-                            `/dashboard/imunisasi/add-data-imunisasi/${imns?.id}`
+                            `/dashboard/pengguna/add-data-pengguna/${usr?.nik}`
                           );
                         }}
                       />
@@ -244,7 +176,7 @@ export default function Imunisasi() {
           )}
           {/* Table */}
           <Pagination
-            dataLength={Number(imunisasi?.data?.length)}
+            dataLength={Number(user?.data?.length)}
             changePage={changePage}
             selectedPage={selectedPage}
           />
@@ -263,7 +195,7 @@ export default function Imunisasi() {
               <div className="grid grid-cols-2 gap-4 py-4 my-8">
                 <Button
                   variant="destructive"
-                  onClick={() => delImunisasi(dataClicked?.id)}
+                  onClick={() => delUser(dataClicked?.nik)}
                 >
                   {loadingDelete ? "Loading..." : "Hapus"}
                 </Button>

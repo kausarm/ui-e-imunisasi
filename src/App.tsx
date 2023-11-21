@@ -7,6 +7,8 @@ import Login from "./pages/login";
 import NotFound from "./pages/404";
 import Imunisasi from "./pages/imunisasi";
 import AddDataImunisasi from "./pages/imunisasi/add-data-imunisasi";
+import Pengguna from "./pages/pengguna";
+import AddDataPengguna from "./pages/pengguna/add-data-pengguna";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,31 @@ export default function App() {
             </Auth>
           }
         />
+        <Route
+          path="/dashboard/pengguna"
+          element={
+            <Auth>
+              <Pengguna />
+            </Auth>
+          }
+        />
+        <Route
+          path="/dashboard/pengguna/add-data-pengguna/:id"
+          element={
+            <Auth>
+              <AddDataPengguna />
+            </Auth>
+          }
+        />
+        <Route
+          path="/dashboard/pengguna/add-data-pengguna"
+          element={
+            <Auth>
+              <AddDataPengguna />
+            </Auth>
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </QueryClientProvider>

@@ -38,6 +38,7 @@ export default function FormAddImunisasi({
             <FormItem>
               <FormLabel>Puskesmas</FormLabel>
               <SelectPuskesmas
+                disabled={data !== null || data?.puskesma?.nama !== undefined}
                 // adjustWidth
                 name="puskesmas"
                 // keyword
