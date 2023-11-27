@@ -1,4 +1,4 @@
-function SelectYear({ onChange }: any) {
+function SelectYear({ onChange, defaultValue }: any) {
   const startYear = 2002;
   const endYear = 2026;
 
@@ -16,6 +16,7 @@ function SelectYear({ onChange }: any) {
     <div>
       <select
         name="selectedYear"
+        defaultValue={defaultValue}
         id="selectedYear"
         onChange={onChange}
         className="p-2 rounded-lg bg-secondary"

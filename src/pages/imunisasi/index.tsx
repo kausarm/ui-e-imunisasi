@@ -118,7 +118,7 @@ export default function Imunisasi() {
       // Create a link element and trigger a download
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.download = "imunisasi_data.xlsx"; // Set the desired file name
+      link.download = "imunisasi_data.xlsx"; // Set the  file name
       document.body.appendChild(link);
       link.click();
 

@@ -13,23 +13,23 @@ import {
   Legend,
   Rectangle,
 } from "recharts";
-import {
-  getImunisasi,
-  getImunisasiFilter,
-  getImunisasiModel,
-} from "../../services/api";
+import { getImunisasiFilter, getImunisasiModel } from "../../services/api";
 import CardCluster from "../../components/CardCluster";
 import { useState } from "react";
 import SelectYear from "../../components/SelectYear";
+import moment from "moment";
 
 export default function Dashboard() {
   const [year, setYear] = useState("");
   const [filter, setFilter] = useState(false);
+  const now = moment();
+  const tahun = now?.format("YYYY");
+
   const { data: imunisasi } = useQuery({
     queryKey: ["imunisasi", year, filter],
     queryFn: async () => {
       if (!filter) {
-        const res = await getImunisasi(100000, 0);
+        const res = await getImunisasiFilter(tahun);
         return res;
       } else {
         const res = await getImunisasiFilter(year);
@@ -51,6 +51,7 @@ export default function Dashboard() {
   return (
     <Sidebar active="DASHBOARD">
       <SelectYear
+        defaultValue={tahun}
         onChange={(e: any) => {
           setFilter(true);
           setYear(e.target.value);
