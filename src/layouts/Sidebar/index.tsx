@@ -18,6 +18,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ children, active, navpage }) => {
+  const stringUser: any = Cookies.get("user");
+  const user = JSON.parse(stringUser);
   const navigation = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -66,7 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ children, active, navpage }) => {
           {/* breadcrum */}
         </div>
 
-        <div className="justify-end profile">
+        <div className="flex items-center justify-end space-x-2 profile">
+          <h1 className="capitalize userName">{user?.nama}</h1>
           <img
             src={IMPP}
             alt="profile picture"
@@ -102,14 +105,16 @@ const Sidebar: React.FC<SidebarProps> = ({ children, active, navpage }) => {
               <LayoutGrid className="w-4 h-4 mr-2" />
               Imunisasi
             </Button>
-            <Button
-              variant={active === "pengguna" ? "secondary" : "ghost"}
-              onClick={() => navigation("/dashboard/pengguna")}
-              className="justify-start w-full rounded-[16px]"
-            >
-              <LayoutGrid className="w-4 h-4 mr-2" />
-              Pengguna
-            </Button>
+            {user?.role === 1 && (
+              <Button
+                variant={active === "pengguna" ? "secondary" : "ghost"}
+                onClick={() => navigation("/dashboard/pengguna")}
+                className="justify-start w-full rounded-[16px]"
+              >
+                <LayoutGrid className="w-4 h-4 mr-2" />
+                Pengguna
+              </Button>
+            )}
           </div>
           <div className="mt-16 wrapper__logout">
             <Button

@@ -49,6 +49,7 @@ export default function Login() {
       return res?.data;
     },
     onSuccess: (res: any) => {
+      Cookies.set("user", JSON.stringify(res?.data));
       const { nik } = res.data;
 
       Cookies.set("tkn", nik);

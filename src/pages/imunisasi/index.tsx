@@ -26,8 +26,11 @@ import useImunisasiStore from "../../store";
 import SelectYear from "../../components/SelectYear";
 import { CircleDashed, DownloadIcon } from "lucide-react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Imunisasi() {
+  const stringUser: any = Cookies.get("user");
+  const user = JSON.parse(stringUser);
   const { setEditGlobal }: any = useImunisasiStore();
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -154,14 +157,17 @@ export default function Imunisasi() {
                   setYear(e.target.value);
                 }}
               />
-              <Button
-                onClick={() => {
-                  setEditGlobal(false);
-                  navigate("/dashboard/imunisasi/add-data-imunisasi");
-                }}
-              >
-                Tambah Data
-              </Button>
+              {user?.role === 1 && (
+                <Button
+                  onClick={() => {
+                    setEditGlobal(false);
+                    navigate("/dashboard/imunisasi/add-data-imunisasi");
+                  }}
+                >
+                  Tambah Data
+                </Button>
+              )}
+
               <Button
                 size={"icon"}
                 onClick={() => {
@@ -202,7 +208,7 @@ export default function Imunisasi() {
                   <TableHead>DPT HB HIB1</TableHead>
                   <TableHead>HBO</TableHead>
                   <TableHead>POLIO</TableHead>
-                  <TableHead>ACTION</TableHead>
+                  {user?.role === 1 && <TableHead>ACTION</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -223,20 +229,22 @@ export default function Imunisasi() {
                     <TableCell>{imns?.HBO ?? "-"}</TableCell>
                     <TableCell>{imns?.POLIO1 ?? "-"}</TableCell>
 
-                    <TableCell>
-                      <ActionButton
-                        hideView
-                        onDelete={() => {
-                          setOpenModal(true);
-                        }}
-                        onEdit={() => {
-                          setEditGlobal(true);
-                          navigate(
-                            `/dashboard/imunisasi/add-data-imunisasi/${imns?.id}`
-                          );
-                        }}
-                      />
-                    </TableCell>
+                    {user?.role === 1 && (
+                      <TableCell>
+                        <ActionButton
+                          hideView
+                          onDelete={() => {
+                            setOpenModal(true);
+                          }}
+                          onEdit={() => {
+                            setEditGlobal(true);
+                            navigate(
+                              `/dashboard/imunisasi/add-data-imunisasi/${imns?.id}`
+                            );
+                          }}
+                        />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
