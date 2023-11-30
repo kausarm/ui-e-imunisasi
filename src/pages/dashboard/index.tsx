@@ -50,14 +50,48 @@ export default function Dashboard() {
 
   return (
     <Sidebar active="DASHBOARD">
-      <SelectYear
-        defaultValue={tahun}
-        onChange={(e: any) => {
-          setFilter(true);
-          setYear(e.target.value);
-        }}
-      />
-      <div className="grid h-full gap-4 md:grid-cols-12 main___wrapper">
+      <div className="px-2 space-y-5 md:space-x-5 md:flex md:space-y-0">
+        <div className="wraperr__select">
+          <SelectYear
+            defaultValue={tahun}
+            onChange={(e: any) => {
+              setFilter(true);
+              setYear(e.target.value);
+            }}
+          />
+        </div>
+        <div className="wrapper__card">
+          <CardCluster
+            label={"TOTAL SELESAI"}
+            cluster={
+              imunisasi_cluster?.data === null
+                ? "0"
+                : imunisasi_cluster?.data[0]?.totals?.SELESAI
+            }
+          />
+        </div>
+        <div className="wrapper__card">
+          <CardCluster
+            label={"TOTAL BELUM SELESAI"}
+            cluster={
+              imunisasi_cluster?.data === null
+                ? "0"
+                : imunisasi_cluster?.data[0]?.totals?.BELUM_SELESAI
+            }
+          />
+        </div>
+        <div className="wrapper__card">
+          <CardCluster
+            label={"TOTAL TIDAK SELESAI"}
+            cluster={
+              imunisasi_cluster?.data === null
+                ? "0"
+                : imunisasi_cluster?.data[0]?.totals?.TIDAK_SELESAI
+            }
+          />
+        </div>
+      </div>
+      <div className="grid h-full gap-4 mt-16 md:grid-cols-12 main___wrapper">
         <div className="col-span-10 wrapper__chart">
           <h1 className="mb-8 text-center">
             Grafik Imunisasi Kabupaten Bireuen

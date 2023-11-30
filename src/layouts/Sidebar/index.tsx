@@ -68,14 +68,16 @@ const Sidebar: React.FC<SidebarProps> = ({ children, active, navpage }) => {
           {/* breadcrum */}
         </div>
 
-        <div className="flex items-center justify-end space-x-2 profile">
-          <h1 className="capitalize userName">{user?.nama}</h1>
+        <div className="flex items-center justify-end px-2 py-1 space-x-2 border rounded-md profile">
+          <h1 className="font-semibold capitalize userName">
+            {user?.nama?.toLowerCase()}
+          </h1>
           <img
             src={IMPP}
             alt="profile picture"
             width={50}
             height={50}
-            className="rounded-full shadow-sm"
+            className="rounded-full "
           />
         </div>
       </nav>

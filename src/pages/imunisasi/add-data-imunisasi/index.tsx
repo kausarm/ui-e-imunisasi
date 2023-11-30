@@ -21,6 +21,7 @@ import useImunisasiStore from "../../../store";
 interface FormValues {
   puskesmas: string;
   regencies: string;
+  tahun: string;
   HBO: string;
   BCG: string;
   POLIO1: string;
@@ -48,6 +49,7 @@ export default function AddDataImunisasi() {
   const formSchema = z.object({
     puskesmas: z.string().min(1, "Wajib diisi!"),
     regencies: z.string().min(1, "Wajib diisi!"),
+    tahun: z.string().min(1, "Wajib diisi!"),
     HBO: z.string().min(1, "Wajib diisi!"),
     BCG: z.string().min(1, "Wajib Diisi!"),
     POLIO1: z.string().min(1, "Wajib Diisi!"),
@@ -61,6 +63,7 @@ export default function AddDataImunisasi() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       puskesmas: "",
+      tahun: "",
       regencies: "1110",
       HBO: "",
       BCG: "",
@@ -82,6 +85,7 @@ export default function AddDataImunisasi() {
 
   useEffect(() => {
     form.setValue("create_by", tkn);
+    form.setValue("tahun", dataEdit?.tahun);
     form.setValue("create_date", date);
     form.setValue("puskesmas", dataEdit?.puskesmas?.toString());
     form.setValue("regencies", "1110");
@@ -93,6 +97,7 @@ export default function AddDataImunisasi() {
   }, [
     dataEdit?.BCG,
     dataEdit?.CAMPAK,
+    dataEdit?.tahun,
     dataEdit?.DPT_HB_HIB1,
     dataEdit?.HBO,
     dataEdit?.POLIO1,

@@ -12,6 +12,7 @@ import { UseFormReturn } from "react-hook-form";
 interface FormAddImunisasiProps {
   form: UseFormReturn<{
     puskesmas: string;
+    tahun: string;
     regencies: string;
     HBO: string;
     BCG: string;
@@ -48,6 +49,20 @@ export default function FormAddImunisasi({
                 hide={true}
                 field={field}
               />
+              <FormMessage className="text-xs" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form?.control}
+          name="tahun"
+          // disabled={data !== null || data?.tahun !== undefined}
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Pilih Tanggal Input</FormLabel>
+              <FormControl>
+                <Input placeholder="Masukkan Tahun" {...field} type="date" />
+              </FormControl>
               <FormMessage className="text-xs" />
             </FormItem>
           )}

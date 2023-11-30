@@ -2,7 +2,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import DinkesImg from "../../assets/images/dinkes.jpg";
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "../../components/ui/use-toast";
@@ -86,52 +87,75 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center w-full min-h-screen login__wrapper ">
-      <div className="flex flex-col items-center justify-center w-full mx-12 form__wrapper md:w-1/4">
-        <div className="flex mb-8 wrapper__title">
-          <h1 className="text-4xl font-bold name text-primary">E-</h1>
-          <h1 className="text-4xl font-bold name">Imunisasi</h1>
-        </div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-8"
+    <div className="grid items-center justify-center w-full min-h-screen grid-cols-12 login__wrapper">
+      <div className="hidden h-screen col-span-6 md:block wrapper__img">
+        <img
+          src={DinkesImg}
+          alt="Gambar dinas kesehatan kabupaten bireuen"
+          width={"100%"}
+          height={"100%"}
+          className="object-cover h-screen"
+        />
+      </div>
+
+      <div className="w-full col-span-12 px-8 md:col-span-6 md:px-28">
+        <div className="items-start hidden space-x-2 mb-14 md:flex wrapper__link text-start">
+          <Link
+            to={"/"}
+            className="font-semibold text-slate-600 hover:text-primary"
           >
-            <FormField
-              control={form.control}
-              name="nik"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>NIK</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Masukkan NIK" {...field} />
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Masukkan Password"
-                      {...field}
-                      type="password"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )}
-            />
-            <Button className="w-full ">
-              {loadingLogin ? "Loading..." : "Login"}
-            </Button>
-          </form>
-        </Form>
+            Beranda /{" "}
+          </Link>
+          <Link to={"/auth/login"} className="font-semibold text-primary">
+            Login
+          </Link>
+        </div>
+        <div className="flex flex-col items-center justify-center form__wrapper ">
+          <div className="flex mb-8 wrapper__title">
+            <h1 className="text-4xl font-bold name text-primary">E-</h1>
+            <h1 className="text-4xl font-bold name">Imunisasi</h1>
+          </div>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full space-y-8"
+            >
+              <FormField
+                control={form.control}
+                name="nik"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NIK</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukkan NIK" {...field} />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Masukkan Password"
+                        {...field}
+                        type="password"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+              <Button className="w-full ">
+                {loadingLogin ? "Loading..." : "Login"}
+              </Button>
+            </form>
+          </Form>
+        </div>
       </div>
     </div>
   );

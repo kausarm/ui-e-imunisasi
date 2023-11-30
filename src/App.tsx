@@ -9,6 +9,7 @@ import Imunisasi from "./pages/imunisasi";
 import AddDataImunisasi from "./pages/imunisasi/add-data-imunisasi";
 import Pengguna from "./pages/pengguna";
 import AddDataPengguna from "./pages/pengguna/add-data-pengguna";
+import Beranda from "./pages/Beranda";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,8 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Beranda />} />
+        <Route path="/auth/login" element={<Login />} />
         <Route
           path="/dashboard/*"
           element={

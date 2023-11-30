@@ -222,7 +222,7 @@ export default function Imunisasi() {
                     <TableCell className="font-medium">
                       {imns?.puskesma?.nama}
                     </TableCell>
-                    <TableCell>{imns?.create_date}</TableCell>
+                    <TableCell>{imns?.tahun}</TableCell>
                     <TableCell>{imns?.BCG}</TableCell>
                     <TableCell>{imns?.CAMPAK}</TableCell>
                     <TableCell>{imns?.DPT_HB_HIB1}</TableCell>

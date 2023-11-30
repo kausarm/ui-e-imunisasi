@@ -6,3 +6,25 @@
 * {
   font-family: "Poppins", sans-serif;
 }
+
+/* Untuk scrollbar vertikal */
+::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bfbdbd;
+  border-radius: 4px;
+}
+
+/* Hover pada thumb scrollbar */
+::-webkit-scrollbar-thumb:hover {
+  background: #b1b1b1;
+  border-radius: 4px;
+}
