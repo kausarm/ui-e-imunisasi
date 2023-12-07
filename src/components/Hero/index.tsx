@@ -1,5 +1,5 @@
 import Styles from "./hero.module.css";
-import ImLanding from "../../assets/images/im-landing.png";
+import ImLanding from "../../assets/images/ilsImunisasi.jpg";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
@@ -27,7 +27,8 @@ export default function Hero() {
               KABUPATEN BIREUEN MENGGUNAKAN METODE K-MEDOIDS
             </h1>
             <h2 className={`mb-12 text-xs md:text-base`}>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              Ayo bersama-sama meningkatkan imunisasi anak-anak Kabupaten
+              Bireuen!
             </h2>
             <Button
               onClick={() => {

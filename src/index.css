@@ -28,3 +28,23 @@
   background: #b1b1b1;
   border-radius: 4px;
 }
+
+/* Gaya cetak hanya untuk elemen dalam container dengan kelas "print-container" */
+@media print {
+  .print-container {
+    color: black; /* Warna teks hitam */
+  }
+
+  .print-container a {
+    color: black; /* Warna tautan hitam */
+    text-decoration: none; /* Tidak ada garis bawah pada tautan */
+  }
+  .no-print {
+    display: none;
+  }
+
+  /* Gaya tambahan khusus untuk cetak */
+  @page {
+    margin: 1cm; /* Batas halaman */
+  }
+}

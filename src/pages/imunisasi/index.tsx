@@ -20,6 +20,7 @@ import {
   getImunisasi,
   getImunisasiFilter,
   getImunisasiKeyword,
+  getImunisasiScaller,
 } from "../../services/api";
 import { toast } from "../../components/ui/use-toast";
 import useImunisasiStore from "../../store";
@@ -27,6 +28,12 @@ import SelectYear from "../../components/SelectYear";
 import { CircleDashed, DownloadIcon } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
 
 export default function Imunisasi() {
   const stringUser: any = Cookies.get("user");
@@ -51,7 +58,7 @@ export default function Imunisasi() {
     refetch,
     isError,
   } = useQuery({
-    queryKey: ["imunisasi", searchValue, filter, year],
+    queryKey: ["imunisasi", searchValue, filter, year, offset],
     queryFn: async () => {
       if (searchValue !== "") {
         const res = await getImunisasiKeyword(10, offset, searchValue);
@@ -66,6 +73,18 @@ export default function Imunisasi() {
       }
     },
     refetchOnWindowFocus: false,
+  });
+
+  const { data: imunisasiScaller } = useQuery({
+    queryKey: ["imunisasi_scaller", searchValue, filter, year, offset],
+    queryFn: async () => {
+      const res = await getImunisasiScaller(
+        year !== "" ? year : 2023,
+        10,
+        offset
+      );
+      return res;
+    },
   });
 
   const changePage = (event: any) => {
@@ -135,128 +154,205 @@ export default function Imunisasi() {
   return (
     <>
       <Sidebar navpage="Data Imunisasi" active="imunisasi">
-        <div className="bg-white border-2 main-wrapper rounded-xl border-soft-blue">
-          {/* header wrapper */}
-          <div className="justify-between space-y-5 md:flex header__wrapper m-7 md:space-y-0">
-            <div className="table__name">
-              <h1 className="font-semibold">Data Imunisasi</h1>
-            </div>
-            <div className="md:w-1/2 search__wrapper">
-              <Input
-                type="input"
-                placeholder="Cari..."
-                onChange={(e) => {
-                  setSearchKeyword(e.target.value);
-                }}
-              />
-            </div>
-            <div className="flex space-x-8 button__wrapper">
-              <SelectYear
-                onChange={(e: any) => {
-                  setFilter(true);
-                  setYear(e.target.value);
-                }}
-              />
-              {user?.role === 1 && (
-                <Button
-                  onClick={() => {
-                    setEditGlobal(false);
-                    navigate("/dashboard/imunisasi/add-data-imunisasi");
-                  }}
-                >
-                  Tambah Data
-                </Button>
-              )}
-
-              <Button
-                size={"icon"}
-                onClick={() => {
-                  handleDownload();
-                }}
-                className={`bg-yellow-500`}
-              >
-                {loadingDownload ? (
-                  <CircleDashed className="animate-spin" />
-                ) : (
-                  <DownloadIcon />
-                )}
-              </Button>
-            </div>
-          </div>
-          {/* header wrapper */}
-          {/* Table */}
-          {isLoading || isRefetching ? (
-            <>
-              <div className="flex items-center justify-center">
-                Sedang memuat...
-              </div>
-              {isError && (
-                <div className="flex items-center justify-center">
-                  Data not found!
+        <Tabs defaultValue="imunisasi" className="w-auto">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="imunisasi">Data Imunisasi</TabsTrigger>
+            <TabsTrigger value="normalisasi">Data Normalisasi</TabsTrigger>
+          </TabsList>
+          <TabsContent value="imunisasi">
+            <div className="bg-white border-2 main-wrapper rounded-xl border-soft-blue">
+              {/* header wrapper */}
+              <div className="justify-between space-y-5 md:flex header__wrapper m-7 md:space-y-0">
+                <div className="table__name">
+                  <h1 className="font-semibold">Data Imunisasi</h1>
                 </div>
-              )}
-            </>
-          ) : (
-            <Table className="mt-5 text-black">
-              <TableHeader>
-                <TableRow className="border-y border-dark-grey-pim bg-table-header">
-                  <TableHead>NO</TableHead>
-                  <TableHead>PUSKESMAS</TableHead>
-                  <TableHead>TAHUN</TableHead>
-                  <TableHead>BCG</TableHead>
-                  <TableHead>CAMPAK</TableHead>
-                  <TableHead>DPT HB HIB1</TableHead>
-                  <TableHead>HBO</TableHead>
-                  <TableHead>POLIO</TableHead>
-                  {user?.role === 1 && <TableHead>ACTION</TableHead>}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {imunisasi?.data?.map((imns: any, index: string) => (
-                  <TableRow
-                    className=""
-                    key={index}
-                    onClick={() => setDataClicked(imns)}
-                  >
-                    <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell className="font-medium">
-                      {imns?.puskesma?.nama}
-                    </TableCell>
-                    <TableCell>{imns?.tahun}</TableCell>
-                    <TableCell>{imns?.BCG}</TableCell>
-                    <TableCell>{imns?.CAMPAK}</TableCell>
-                    <TableCell>{imns?.DPT_HB_HIB1}</TableCell>
-                    <TableCell>{imns?.HBO ?? "-"}</TableCell>
-                    <TableCell>{imns?.POLIO1 ?? "-"}</TableCell>
+                <div className="md:w-1/2 search__wrapper">
+                  <Input
+                    type="input"
+                    placeholder="Cari..."
+                    onChange={(e) => {
+                      setSearchKeyword(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex space-x-8 button__wrapper">
+                  <SelectYear
+                    onChange={(e: any) => {
+                      setFilter(true);
+                      setYear(e.target.value);
+                    }}
+                  />
+                  {user?.role === 1 && (
+                    <Button
+                      onClick={() => {
+                        setEditGlobal(false);
+                        navigate("/dashboard/imunisasi/add-data-imunisasi");
+                      }}
+                    >
+                      Tambah Data
+                    </Button>
+                  )}
 
-                    {user?.role === 1 && (
-                      <TableCell>
-                        <ActionButton
-                          hideView
-                          onDelete={() => {
-                            setOpenModal(true);
-                          }}
-                          onEdit={() => {
-                            setEditGlobal(true);
-                            navigate(
-                              `/dashboard/imunisasi/add-data-imunisasi/${imns?.id}`
-                            );
-                          }}
-                        />
-                      </TableCell>
+                  <Button
+                    size={"icon"}
+                    onClick={() => {
+                      handleDownload();
+                    }}
+                    className={`bg-yellow-500`}
+                  >
+                    {loadingDownload ? (
+                      <CircleDashed className="animate-spin" />
+                    ) : (
+                      <DownloadIcon />
                     )}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-          {/* Table */}
-          <Pagination
-            dataLength={Number(imunisasi?.data?.length)}
+                  </Button>
+                </div>
+              </div>
+              {/* header wrapper */}
+              {/* Table */}
+              {isLoading || isRefetching ? (
+                <>
+                  <div className="flex items-center justify-center">
+                    Sedang memuat...
+                  </div>
+                  {isError && (
+                    <div className="flex items-center justify-center">
+                      Data not found!
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Table className="mt-5 text-black">
+                  <TableHeader>
+                    <TableRow className="border-y border-dark-grey-pim bg-table-header">
+                      <TableHead>PUSKESMAS</TableHead>
+                      <TableHead>TAHUN</TableHead>
+                      <TableHead>BCG</TableHead>
+                      <TableHead>CAMPAK</TableHead>
+                      <TableHead>DPT HB HIB1</TableHead>
+                      <TableHead>HBO</TableHead>
+                      <TableHead>POLIO</TableHead>
+                      {user?.role === 1 && <TableHead>ACTION</TableHead>}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {imunisasi?.data?.data?.map((imns: any, index: string) => (
+                      <TableRow
+                        className=""
+                        key={index}
+                        onClick={() => setDataClicked(imns)}
+                      >
+                        <TableCell className="font-medium">
+                          {imns?.puskesma?.nama}
+                        </TableCell>
+                        <TableCell>{imns?.tahun}</TableCell>
+                        <TableCell>{imns?.BCG}</TableCell>
+                        <TableCell>{imns?.CAMPAK}</TableCell>
+                        <TableCell>{imns?.DPT_HB_HIB1}</TableCell>
+                        <TableCell>{imns?.HBO ?? "-"}</TableCell>
+                        <TableCell>{imns?.POLIO1 ?? "-"}</TableCell>
+
+                        {user?.role === 1 && (
+                          <TableCell>
+                            <ActionButton
+                              hideView
+                              onDelete={() => {
+                                setOpenModal(true);
+                              }}
+                              onEdit={() => {
+                                setEditGlobal(true);
+                                navigate(
+                                  `/dashboard/imunisasi/add-data-imunisasi/${imns?.id}`
+                                );
+                              }}
+                            />
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+              {/* Table */}
+              <Pagination
+                dataLength={Number(imunisasi?.data?.total)}
+                changePage={changePage}
+                selectedPage={selectedPage}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="normalisasi">
+            <div className="mt-8 bg-white border-2 main-wrapper rounded-xl border-soft-blue">
+              {/* header wrapper */}
+              <div className="justify-between space-y-5 md:flex header__wrapper m-7 md:space-y-0">
+                <div className="table__name">
+                  <h1 className="font-semibold">Data Normalisasi</h1>
+                </div>
+              </div>
+              {/* header wrapper */}
+              {/* Table */}
+              {isLoading || isRefetching ? (
+                <>
+                  <div className="flex items-center justify-center">
+                    Sedang memuat...
+                  </div>
+                  {isError && (
+                    <div className="flex items-center justify-center">
+                      Data not found!
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Table className="mt-5 text-black">
+                  <TableHeader>
+                    <TableRow className="border-y border-dark-grey-pim bg-table-header">
+                      <TableHead>PUSKESMAS</TableHead>
+                      <TableHead>BCG</TableHead>
+                      <TableHead>CAMPAK</TableHead>
+                      <TableHead>DPT HB HIB1</TableHead>
+                      <TableHead>HBO</TableHead>
+                      <TableHead>POLIO</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {imunisasiScaller?.data?.map((imns: any, index: number) => (
+                      <TableRow
+                        className=""
+                        key={index}
+                        // onClick={() => setDataClicked(imns)}
+                      >
+                        <TableCell className="font-medium">
+                          {imns?.puskesmas}
+                        </TableCell>
+                        <TableCell>
+                          {imns?.normalize[0]?.toString()?.slice(0, 5)}
+                        </TableCell>
+                        <TableCell>
+                          {imns?.normalize[1]?.toString()?.slice(0, 5)}
+                        </TableCell>
+                        <TableCell>
+                          {imns?.normalize[2]?.toString()?.slice(0, 5)}
+                        </TableCell>
+                        <TableCell>
+                          {imns?.normalize[3]?.toString()?.slice(0, 5)}
+                        </TableCell>
+                        <TableCell>
+                          {imns?.normalize[4]?.toString()?.slice(0, 5)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+              {/* Table */}
+              {/* <Pagination
+            dataLength={Number(imunisasi?.data?.total)}
             changePage={changePage}
             selectedPage={selectedPage}
-          />
-        </div>
+          /> */}
+            </div>
+          </TabsContent>
+        </Tabs>
       </Sidebar>
       {OpenModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">

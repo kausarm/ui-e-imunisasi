@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children, active, navpage }) => {
   return (
     <main>
       <nav
-        className={`fixed ${
+        className={`fixed no-print ${
           isOpen ? "" : "top-0 z-20"
         }  flex items-center top-0 justify-between w-full h-20 px-6 py-4 bg-white border-b-2 navbar border-soft-blue`}
       >

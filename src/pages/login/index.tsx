@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
-import DinkesImg from "../../assets/images/dinkes.jpg";
+import DinkesImg from "../../assets/images/bireuen.png";
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "../../components/ui/use-toast";
@@ -88,14 +88,19 @@ export default function Login() {
 
   return (
     <div className="grid items-center justify-center w-full min-h-screen grid-cols-12 login__wrapper">
-      <div className="hidden h-screen col-span-6 md:block wrapper__img">
-        <img
-          src={DinkesImg}
-          alt="Gambar dinas kesehatan kabupaten bireuen"
-          width={"100%"}
-          height={"100%"}
-          className="object-cover h-screen"
-        />
+      <div className="hidden h-screen col-span-6 md:block wrapper__img bg-primary">
+        <div className="flex flex-col items-center justify-center h-screen">
+          <img
+            src={DinkesImg}
+            alt="Gambar dinas kesehatan kabupaten bireuen"
+            width={"30%"}
+            height={"30%"}
+            // className="object-cover h-screen"
+          />
+          <h1 className="mt-8 text-2xl font-semibold tracking-wide text-slate-800">
+            Dinas Kesehatan Kabupaten Bireuen
+          </h1>
+        </div>
       </div>
 
       <div className="w-full col-span-12 px-8 md:col-span-6 md:px-28">

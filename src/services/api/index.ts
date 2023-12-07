@@ -37,6 +37,17 @@ export async function getImunisasi(limit:number, offset:number) {
   });
 }
 
+export async function getImunisasiScaller(tahun:any,limit:number, offset:number) {
+  const URL = `imunisasi/${tahun}/scaller?limit=${limit}&offset=${offset}`;
+
+  const url = `${ROOT_API}/${URL}`;
+
+  return callAPI({
+    url,
+    method: "GET",
+  });
+}
+
 export async function getImunisasiFilter(tahun:any) {
   const URL = `imunisasi/${tahun}/filter`;
 
@@ -48,14 +59,15 @@ export async function getImunisasiFilter(tahun:any) {
   });
 }
 
-export async function getImunisasiModel(tahun:any) {
+export async function getImunisasiModelData(tahun:any,data:any) {
   const URL = `imunisasi/${tahun}/model`;
 
   const url = `${ROOT_API}/${URL}`;
 
   return callAPI({
     url,
-    method: "GET",
+    method: "POST",
+    data
   });
 }
 

@@ -10,6 +10,8 @@ import AddDataImunisasi from "./pages/imunisasi/add-data-imunisasi";
 import Pengguna from "./pages/pengguna";
 import AddDataPengguna from "./pages/pengguna/add-data-pengguna";
 import Beranda from "./pages/Beranda";
+import AboutUs from "./pages/about-us";
+import "vite/modulepreload-polyfill";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +21,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Beranda />} />
         <Route path="/auth/login" element={<Login />} />
+        <Route path="/about-us" element={<AboutUs />} />
         <Route
           path="/dashboard/*"
           element={
