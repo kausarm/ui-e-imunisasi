@@ -125,7 +125,7 @@ export default function Imunisasi() {
       // Make a GET request to the download endpoint
       setLoadingDonwload(true);
       const response = await axios.get(
-        "http://localhost:5005/imunisasi/download",
+        "http://localhost:3000/imunisasi/download",
         {
           responseType: "blob", // Set the response type to blob
         }

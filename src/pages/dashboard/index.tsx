@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Sidebar from "../../layouts/Sidebar";
+import * as XLSX from "xlsx";
 import {
   BarChart,
   Bar,
@@ -15,7 +16,7 @@ import {
 } from "recharts";
 import { getImunisasiFilter, getImunisasiModelData } from "../../services/api";
 import CardCluster from "../../components/CardCluster";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectYear from "../../components/SelectYear";
 import moment from "moment";
 import DynamicInput from "../../components/DynamicInput";
@@ -29,6 +30,7 @@ import {
 import { Button } from "../../components/ui/button";
 import { toast } from "../../components/ui/use-toast";
 import { DownloadIcon } from "lucide-react";
+import Cookies from "js-cookie";
 
 interface ManualData {
   values: number[][];
@@ -121,7 +123,40 @@ export default function Dashboard() {
 
   const submitData = () => {
     proseCluster({ year: year !== "" ? year : 2023, manualData: manual });
+    Cookies.set("data", JSON.stringify(manual));
   };
+
+  const downloadExcel = () => {
+    if (dataCluster && dataCluster?.data) {
+      const ws = XLSX.utils.json_to_sheet(
+        dataCluster.data.map((item: any) => ({
+          "Nama Puskesmas": item.puskesmas,
+          Klaster: item.klaster?.toString(),
+        }))
+      );
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet 1");
+
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Data Cluster.xlsx";
+      link.click();
+    }
+  };
+
+  useEffect(() => {
+    const dataLoaded = Cookies.get("data");
+    if (dataLoaded) {
+      const parsedData = JSON.parse(dataLoaded);
+      setManual(parsedData);
+    }
+  }, []);
 
   return (
     <>
@@ -143,7 +178,7 @@ export default function Dashboard() {
               onClick={() => {
                 setFilterStatus("SEMUA");
               }}
-              cluster={dataCluster?.data?.length}
+              cluster={dataCluster?.data?.length ?? 20}
             />
           </div>
           <div className="wrapper__card">
@@ -156,7 +191,7 @@ export default function Dashboard() {
               cluster={
                 dataCluster?.data === null
                   ? "0"
-                  : dataCluster?.data[0]?.totals?.SELESAI
+                  : dataCluster?.data[0]?.totals?.SELESAI ?? 0
               }
             />
           </div>
@@ -170,7 +205,7 @@ export default function Dashboard() {
               cluster={
                 dataCluster?.data === null
                   ? "0"
-                  : dataCluster?.data[0]?.totals?.BELUM_SELESAI
+                  : dataCluster?.data[0]?.totals?.BELUM_SELESAI ?? 0
               }
             />
           </div>
@@ -184,7 +219,7 @@ export default function Dashboard() {
               cluster={
                 dataCluster?.data === null
                   ? "0"
-                  : dataCluster?.data[0]?.totals?.TIDAK_SELESAI
+                  : dataCluster?.data[0]?.totals?.TIDAK_SELESAI ?? 0
               }
             />
           </div>
@@ -261,14 +296,21 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
           <div className="w-ful md:col-span-2 wrapper__cluster no-print">
-            <div className="flex justify-end mb-8 wrapper__start__clustering">
+            <div className="flex justify-end mb-8 space-x-5 wrapper__start__clustering">
               <Button
                 variant="default"
                 onClick={() => {
                   setIsOpen(true);
                 }}
               >
-                Tampilkan Klaster
+                Show Klaster
+              </Button>
+              <Button
+                size={"icon"}
+                className="bg-yellow-400 hover:bg-yellow-400"
+                onClick={downloadExcel}
+              >
+                <DownloadIcon className="w-5 h-5" />
               </Button>
             </div>
             <h1 className="text-center">Hasil Klaster:</h1>
