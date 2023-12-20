@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Sidebar from "../../layouts/Sidebar";
 import * as XLSX from "xlsx";
 import {
@@ -16,40 +16,40 @@ import {
 } from "recharts";
 import { getImunisasiFilter, getImunisasiModelData } from "../../services/api";
 import CardCluster from "../../components/CardCluster";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SelectYear from "../../components/SelectYear";
-import moment from "moment";
-import DynamicInput from "../../components/DynamicInput";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../../components/ui/dialog";
+// import moment from "moment";
+// import DynamicInput from "../../components/DynamicInput";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogHeader,
+//   DialogTitle,
+// } from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
-import { toast } from "../../components/ui/use-toast";
+// import { toast } from "../../components/ui/use-toast";
 import { DownloadIcon } from "lucide-react";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
-interface ManualData {
-  values: number[][];
-}
+// interface ManualData {
+//   values: number[][];
+// }
 
 export default function Dashboard() {
-  const [year, setYear] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [year, setYear] = useState("2021");
+  // const [isOpen, setIsOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("SEMUA");
-  const [dataCluster, setDataCluster] = useState<any>();
+  // const [dataCluster, setDataCluster] = useState<any>();
   const [filter, setFilter] = useState(false);
-  const now = moment();
-  const tahun = now?.format("YYYY");
+  // const now = moment();
+  // const tahun = now?.format("YYYY");
 
   const { data: imunisasi } = useQuery({
     queryKey: ["imunisasi", year, filter],
     queryFn: async () => {
       if (!filter) {
-        const res = await getImunisasiFilter(tahun);
+        const res = await getImunisasiFilter("2021");
         return res;
       } else {
         const res = await getImunisasiFilter(year);
@@ -59,77 +59,86 @@ export default function Dashboard() {
     refetchOnWindowFocus: false,
   });
 
-  const initialArrayCount = 3; // Jumlah form input awal untuk setiap array
-  const [manual, setManual] = useState<ManualData[]>([
-    {
-      values: Array.from({ length: initialArrayCount }, () => [0, 0, 0, 0, 0]),
-    },
-  ]);
+  // const initialArrayCount = 3; // Jumlah form input awal untuk setiap array
+  // const [manual, setManual] = useState<ManualData[]>([
+  //   {
+  //     values: Array.from({ length: initialArrayCount }, () => [0, 0, 0, 0, 0]),
+  //   },
+  // ]);
 
-  const updateArrayValue = (
-    setIndex: any,
-    arrayIndex: any,
-    valueIndex: any,
-    value: any
-  ) => {
-    setManual((prevManual) => {
-      const updatedManual = [...prevManual];
-      updatedManual[setIndex].values[arrayIndex][valueIndex] = value.trim();
-      return updatedManual;
-    });
-  };
+  // const updateArrayValue = (
+  //   setIndex: any,
+  //   arrayIndex: any,
+  //   valueIndex: any,
+  //   value: any
+  // ) => {
+  //   setManual((prevManual) => {
+  //     const updatedManual = [...prevManual];
+  //     updatedManual[setIndex].values[arrayIndex][valueIndex] = value.trim();
+  //     return updatedManual;
+  //   });
+  // };
 
-  const addInputSet = () => {
-    setManual((prevManual) => [
-      ...prevManual,
-      {
-        values: Array.from({ length: initialArrayCount }, () => [
-          0, 0, 0, 0, 0,
-        ]),
-      },
-    ]);
-  };
+  // const addInputSet = () => {
+  //   setManual((prevManual) => [
+  //     ...prevManual,
+  //     {
+  //       values: Array.from({ length: initialArrayCount }, () => [
+  //         0, 0, 0, 0, 0,
+  //       ]),
+  //     },
+  //   ]);
+  // };
 
-  const removeInputSet = (setIndex: any) => {
-    setManual((prevManual) => {
-      const updatedManual = [...prevManual];
-      updatedManual.splice(setIndex, 1);
-      return updatedManual;
-    });
-  };
+  // const removeInputSet = (setIndex: any) => {
+  //   setManual((prevManual) => {
+  //     const updatedManual = [...prevManual];
+  //     updatedManual.splice(setIndex, 1);
+  //     return updatedManual;
+  //   });
+  // };
 
-  const { mutate: proseCluster, isLoading } = useMutation(
-    ["mutationKey"], // Key unik untuk query ini
-    async (data: { year: any; manualData: any }) => {
-      const { year, manualData } = data;
-      const res: any = await getImunisasiModelData(year, {
-        inputManual: manualData,
-      });
-      if (res?.error === true) {
-        toast({
-          variant: "destructive",
-          title: res?.message,
-        });
-      } else {
-        toast({
-          variant: "success",
-          title: "Proses Klaster Berhasil!",
-        });
-      }
-      setDataCluster(res);
+  // const { mutate: proseCluster, isLoading } = useMutation(
+  //   ["mutationKey"], // Key unik untuk query ini
+  //   async (data: { year: any; manualData: any }) => {
+  //     const { year, manualData } = data;
+  //     const res: any = await getImunisasiModelData(year, {
+  //       inputManual: manualData,
+  //     });
+  //     if (res?.error === true) {
+  //       toast({
+  //         variant: "destructive",
+  //         title: res?.message,
+  //       });
+  //     } else {
+  //       toast({
+  //         variant: "success",
+  //         title: "Proses Klaster Berhasil!",
+  //       });
+  //     }
+  //     setDataCluster(res);
+  //     return res;
+  //   }
+  // );
+
+  const { data: proseCluster } = useQuery({
+    queryKey: ["proses_kluster", year],
+    queryFn: async () => {
+      const res: any = await getImunisasiModelData(year);
       return res;
-    }
-  );
+    },
+    refetchOnWindowFocus: false,
+  });
 
-  const submitData = () => {
-    proseCluster({ year: year !== "" ? year : 2023, manualData: manual });
-    Cookies.set("data", JSON.stringify(manual));
-  };
+  // const submitData = () => {
+  //   proseCluster({ year: year !== "" ? year : 2023, manualData: manual });
+  //   Cookies.set("data", JSON.stringify(manual));
+  // };
 
   const downloadExcel = () => {
-    if (dataCluster && dataCluster?.data) {
+    if (proseCluster && proseCluster?.data) {
       const ws = XLSX.utils.json_to_sheet(
-        dataCluster.data.map((item: any) => ({
+        proseCluster.data.map((item: any) => ({
           "Nama Puskesmas": item.puskesmas,
           Klaster: item.klaster?.toString(),
         }))
@@ -150,13 +159,13 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    const dataLoaded = Cookies.get("data");
-    if (dataLoaded) {
-      const parsedData = JSON.parse(dataLoaded);
-      setManual(parsedData);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const dataLoaded = Cookies.get("data");
+  //   if (dataLoaded) {
+  //     const parsedData = JSON.parse(dataLoaded);
+  //     setManual(parsedData);
+  //   }
+  // }, []);
 
   return (
     <>
@@ -164,7 +173,7 @@ export default function Dashboard() {
         <div className="px-2 space-y-5 md:space-x-5 md:flex md:space-y-0 no-print">
           <div className="wraperr__select">
             <SelectYear
-              defaultValue={tahun}
+              defaultValue={"2021"}
               onChange={(e: any) => {
                 setFilter(true);
                 setYear(e.target.value);
@@ -178,7 +187,7 @@ export default function Dashboard() {
               onClick={() => {
                 setFilterStatus("SEMUA");
               }}
-              cluster={dataCluster?.data?.length ?? 20}
+              cluster={proseCluster?.data?.length ?? 20}
             />
           </div>
           <div className="wrapper__card">
@@ -189,9 +198,9 @@ export default function Dashboard() {
                 setFilterStatus("TOTAL SELESAI");
               }}
               cluster={
-                dataCluster?.data === null
+                proseCluster?.data === null
                   ? "0"
-                  : dataCluster?.data[0]?.totals?.SELESAI ?? 0
+                  : proseCluster?.data[0]?.totals?.SELESAI ?? 0
               }
             />
           </div>
@@ -203,9 +212,9 @@ export default function Dashboard() {
                 setFilterStatus("TOTAL BELUM SELESAI");
               }}
               cluster={
-                dataCluster?.data === null
+                proseCluster?.data === null
                   ? "0"
-                  : dataCluster?.data[0]?.totals?.BELUM_SELESAI ?? 0
+                  : proseCluster?.data[0]?.totals?.BELUM_SELESAI ?? 0
               }
             />
           </div>
@@ -217,9 +226,9 @@ export default function Dashboard() {
                 setFilterStatus("TOTAL TIDAK SELESAI");
               }}
               cluster={
-                dataCluster?.data === null
+                proseCluster?.data === null
                   ? "0"
-                  : dataCluster?.data[0]?.totals?.TIDAK_SELESAI ?? 0
+                  : proseCluster?.data[0]?.totals?.TIDAK_SELESAI ?? 0
               }
             />
           </div>
@@ -299,33 +308,26 @@ export default function Dashboard() {
             <div className="flex justify-end mb-8 space-x-5 wrapper__start__clustering">
               <Button
                 variant="default"
-                onClick={() => {
-                  setIsOpen(true);
-                }}
+                className="hidden"
+                // onClick={() => {
+                //   setIsOpen(true);
+                // }}
               >
                 Show Klaster
               </Button>
               <Button
-                size={"icon"}
-                className="bg-yellow-400 hover:bg-yellow-400"
+                // size={"icon"}
+                // className="bg-yellow-400 hover:bg-yellow-400"
                 onClick={downloadExcel}
               >
-                <DownloadIcon className="w-5 h-5" />
+                Download <DownloadIcon className="w-5 h-5 ml-2" />
               </Button>
             </div>
             <h1 className="text-center">Hasil Klaster:</h1>
             <div className="md:flex md:flex-col mt-8 space-y-10 wrapper__list md:h-[500px] md:overflow-y-scroll w-full">
-              {dataCluster?.data?.map((item: any, index: number) => {
-                if (filterStatus === "SEMUA") {
-                  return (
-                    <CardCluster
-                      key={index}
-                      label={item?.puskesmas}
-                      cluster={item?.klaster?.toString()}
-                    />
-                  );
-                } else if (filterStatus === "TOTAL SELESAI") {
-                  if (item?.klaster?.toString() === "SELESAI") {
+              {proseCluster?.data ? (
+                proseCluster?.data?.map((item: any, index: number) => {
+                  if (filterStatus === "SEMUA") {
                     return (
                       <CardCluster
                         key={index}
@@ -333,34 +335,48 @@ export default function Dashboard() {
                         cluster={item?.klaster?.toString()}
                       />
                     );
+                  } else if (filterStatus === "TOTAL SELESAI") {
+                    if (item?.klaster?.toString() === "SELESAI") {
+                      return (
+                        <CardCluster
+                          key={index}
+                          label={item?.puskesmas}
+                          cluster={item?.klaster?.toString()}
+                        />
+                      );
+                    }
+                  } else if (filterStatus === "TOTAL BELUM SELESAI") {
+                    if (item?.klaster?.toString() === "BELUM SELESAI") {
+                      return (
+                        <CardCluster
+                          key={index}
+                          label={item?.puskesmas}
+                          cluster={item?.klaster?.toString()}
+                        />
+                      );
+                    }
+                  } else if (filterStatus === "TOTAL TIDAK SELESAI") {
+                    if (item?.klaster?.toString() === "TIDAK SELESAI") {
+                      return (
+                        <CardCluster
+                          key={index}
+                          label={item?.puskesmas}
+                          cluster={item?.klaster?.toString()}
+                        />
+                      );
+                    }
                   }
-                } else if (filterStatus === "TOTAL BELUM SELESAI") {
-                  if (item?.klaster?.toString() === "BELUM SELESAI") {
-                    return (
-                      <CardCluster
-                        key={index}
-                        label={item?.puskesmas}
-                        cluster={item?.klaster?.toString()}
-                      />
-                    );
-                  }
-                } else if (filterStatus === "TOTAL TIDAK SELESAI") {
-                  if (item?.klaster?.toString() === "TIDAK SELESAI") {
-                    return (
-                      <CardCluster
-                        key={index}
-                        label={item?.puskesmas}
-                        cluster={item?.klaster?.toString()}
-                      />
-                    );
-                  }
-                }
-              })}
+                })
+              ) : (
+                <h1 className="font-bold text-center">
+                  Tidak ada data tahun {year}
+                </h1>
+              )}
             </div>
           </div>
         </div>
       </Sidebar>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      {/* <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto ">
           <DialogHeader>
             <DialogTitle className="text-center">
@@ -378,7 +394,7 @@ export default function Dashboard() {
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

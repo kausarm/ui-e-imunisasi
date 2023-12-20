@@ -59,15 +59,15 @@ export async function getImunisasiFilter(tahun:any) {
   });
 }
 
-export async function getImunisasiModelData(tahun:any,data:any) {
+export async function getImunisasiModelData(tahun:any) {
   const URL = `imunisasi/${tahun}/model`;
 
   const url = `${ROOT_API}/${URL}`;
 
   return callAPI({
     url,
-    method: "POST",
-    data
+    method: "GET",
+    // data
   });
 }
 

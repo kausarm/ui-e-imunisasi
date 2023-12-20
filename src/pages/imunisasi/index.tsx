@@ -288,6 +288,14 @@ export default function Imunisasi() {
                 <div className="table__name">
                   <h1 className="font-semibold">Data Normalisasi</h1>
                 </div>
+                <div className="flex space-x-8 button__wrapper">
+                  <SelectYear
+                    onChange={(e: any) => {
+                      setFilter(true);
+                      setYear(e.target.value);
+                    }}
+                  />
+                </div>
               </div>
               {/* header wrapper */}
               {/* Table */}
@@ -307,11 +315,11 @@ export default function Imunisasi() {
                   <TableHeader>
                     <TableRow className="border-y border-dark-grey-pim bg-table-header">
                       <TableHead>PUSKESMAS</TableHead>
-                      <TableHead>BCG</TableHead>
-                      <TableHead>CAMPAK</TableHead>
-                      <TableHead>DPT HB HIB1</TableHead>
                       <TableHead>HBO</TableHead>
+                      <TableHead>BCG</TableHead>
                       <TableHead>POLIO</TableHead>
+                      <TableHead>DPT HB HIB1</TableHead>
+                      <TableHead>CAMPAK</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
