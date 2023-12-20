@@ -85,7 +85,7 @@ export default function FormAddImunisasi({
           name="BCG"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel>Atasan BCG</FormLabel>
+              <FormLabel>BCG</FormLabel>
               <FormControl>
                 <Input placeholder="Masukkan BCG" {...field} type="number" />
               </FormControl>
@@ -101,7 +101,7 @@ export default function FormAddImunisasi({
           name="POLIO1"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel>Level POLIO1</FormLabel>
+              <FormLabel>POLIO1</FormLabel>
               <FormControl>
                 <Input placeholder="Masukkan POLIO1" {...field} type="number" />
               </FormControl>
