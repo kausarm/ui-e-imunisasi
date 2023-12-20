@@ -227,11 +227,11 @@ export default function Imunisasi() {
                     <TableRow className="border-y border-dark-grey-pim bg-table-header">
                       <TableHead>PUSKESMAS</TableHead>
                       <TableHead>TAHUN</TableHead>
-                      <TableHead>BCG</TableHead>
-                      <TableHead>CAMPAK</TableHead>
-                      <TableHead>DPT HB HIB1</TableHead>
                       <TableHead>HBO</TableHead>
+                      <TableHead>BCG</TableHead>
                       <TableHead>POLIO</TableHead>
+                      <TableHead>DPT HB HIB1</TableHead>
+                      <TableHead>CAMPAK</TableHead>
                       {user?.role === 1 && <TableHead>ACTION</TableHead>}
                     </TableRow>
                   </TableHeader>
@@ -246,11 +246,11 @@ export default function Imunisasi() {
                           {imns?.puskesma?.nama}
                         </TableCell>
                         <TableCell>{imns?.tahun}</TableCell>
-                        <TableCell>{imns?.BCG}</TableCell>
-                        <TableCell>{imns?.CAMPAK}</TableCell>
-                        <TableCell>{imns?.DPT_HB_HIB1}</TableCell>
                         <TableCell>{imns?.HBO ?? "-"}</TableCell>
+                        <TableCell>{imns?.BCG}</TableCell>
                         <TableCell>{imns?.POLIO1 ?? "-"}</TableCell>
+                        <TableCell>{imns?.DPT_HB_HIB1}</TableCell>
+                        <TableCell>{imns?.CAMPAK}</TableCell>
 
                         {user?.role === 1 && (
                           <TableCell>
