@@ -333,19 +333,24 @@ export default function Imunisasi() {
                           {imns?.puskesmas}
                         </TableCell>
                         <TableCell>
-                          {imns?.normalize[0]?.toString()?.slice(0, 5)}
+                          {imns?.normalize &&
+                            imns.normalize[0]?.toString()?.slice(0, 5)}
                         </TableCell>
                         <TableCell>
-                          {imns?.normalize[1]?.toString()?.slice(0, 5)}
+                          {imns?.normalize &&
+                            imns.normalize[1]?.toString()?.slice(0, 5)}
                         </TableCell>
                         <TableCell>
-                          {imns?.normalize[2]?.toString()?.slice(0, 5)}
+                          {imns?.normalize &&
+                            imns.normalize[2]?.toString()?.slice(0, 5)}
                         </TableCell>
                         <TableCell>
-                          {imns?.normalize[3]?.toString()?.slice(0, 5)}
+                          {imns?.normalize &&
+                            imns.normalize[3]?.toString()?.slice(0, 5)}
                         </TableCell>
                         <TableCell>
-                          {imns?.normalize[4]?.toString()?.slice(0, 5)}
+                          {imns?.normalize &&
+                            imns.normalize[4]?.toString()?.slice(0, 5)}
                         </TableCell>
                       </TableRow>
                     ))}

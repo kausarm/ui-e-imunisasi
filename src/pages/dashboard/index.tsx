@@ -130,10 +130,34 @@ export default function Dashboard() {
     refetchOnWindowFocus: false,
   });
 
-  // const submitData = () => {
-  //   proseCluster({ year: year !== "" ? year : 2023, manualData: manual });
-  //   Cookies.set("data", JSON.stringify(manual));
-  // };
+  const NEW_FORMATTER = proseCluster?.data?.map((item: any) => {
+    if (item?.klaster === "SELESAI") {
+      return {
+        // selesai: item?.klaster,
+        SELESAI: 30,
+        // value: 30,
+        puskesmas: item?.puskesmas,
+      };
+    }
+    if (item?.klaster === "BELUM SELESAI") {
+      return {
+        // belumSelesai: item?.klaster,
+        BELUM_SELESAI: 20,
+        // value: 20,
+        puskesmas: item?.puskesmas,
+      };
+    }
+    if (item?.klaster === "TIDAK SELESAI") {
+      return {
+        // tidakSelesai: item?.klaster,
+        TIDAK_SELESAI: 10,
+        // value: 10,
+        puskesmas: item?.puskesmas,
+      };
+    }
+  });
+
+  console.log("data::", NEW_FORMATTER);
 
   const downloadExcel = () => {
     if (proseCluster && proseCluster?.data) {
@@ -158,14 +182,6 @@ export default function Dashboard() {
       link.click();
     }
   };
-
-  // useEffect(() => {
-  //   const dataLoaded = Cookies.get("data");
-  //   if (dataLoaded) {
-  //     const parsedData = JSON.parse(dataLoaded);
-  //     setManual(parsedData);
-  //   }
-  // }, []);
 
   return (
     <>
@@ -249,6 +265,7 @@ export default function Dashboard() {
                 <DownloadIcon className="w-5 h-5" />
               </Button>
             </div>
+
             <ResponsiveContainer width="100%" height={450}>
               <BarChart
                 data={imunisasi?.data?.data}
@@ -303,6 +320,99 @@ export default function Dashboard() {
                 />
               </BarChart>
             </ResponsiveContainer>
+            <div className="mt-20 wrapper_chart_total">
+              <ResponsiveContainer width="100%" height={450}>
+                <BarChart
+                  data={NEW_FORMATTER}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="puskesmas"
+                    fontSize={12}
+                    angle={-20} // Menyesuaikan sudut teks agar terlihat jelas
+                    textAnchor="end"
+                    interval={0}
+                    height={90}
+                  />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value: any, name, props: any) => {
+                      console.log("props", value, props);
+                      // Hide the value display in the Tooltip
+                      return [name];
+                    }}
+                  />
+                  <Legend />
+                  <Bar
+                    dataKey="SELESAI"
+                    barSize={8}
+                    fill="#0ca067"
+                    activeBar={<Rectangle fill="#0ca067" />}
+                  />
+                  <Bar
+                    barSize={8}
+                    dataKey="BELUM_SELESAI"
+                    fill="#e0bc1a"
+                    activeBar={<Rectangle fill="#e0bc1a" />}
+                  />
+                  <Bar
+                    barSize={8}
+                    dataKey="TIDAK_SELESAI"
+                    fill="#f42602"
+                    activeBar={<Rectangle fill="#f42602" />}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            {/* <div className="mt-20 wrapper_chart_total">
+              <ResponsiveContainer width="80%" height={450}>
+                <BarChart
+                  data={formattedData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="totals"
+                    angle={-20}
+                    textAnchor="end"
+                    interval={0}
+                    height={90}
+                  />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar
+                    dataKey="selesai"
+                    barSize={8}
+                    fill="#0ca067"
+                    activeBar={<Rectangle fill="#0ca067" />}
+                  />
+                  <Bar
+                    barSize={8}
+                    dataKey="belumSelesai"
+                    fill="#e0bc1a"
+                    activeBar={<Rectangle fill="#e0bc1a" />}
+                  />
+                  <Bar
+                    barSize={8}
+                    dataKey="tidakSelesai"
+                    fill="#f42602"
+                    activeBar={<Rectangle fill="#f42602" />}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div> */}
           </div>
           <div className="w-ful md:col-span-2 wrapper__cluster no-print">
             <div className="flex justify-end mb-8 space-x-5 wrapper__start__clustering">
